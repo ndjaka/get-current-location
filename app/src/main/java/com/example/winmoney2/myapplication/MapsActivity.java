@@ -91,7 +91,7 @@ public class MapsActivity extends FragmentActivity implements
             public void onClick(View v) {
                 Log.i("lancement de la mthode","*********place 1"+place1.getPosition().toString()+"place 2"+ place2.getPosition().toString());
 
-                String url = getMapsApiDirectionsUrl(place1.getPosition(),place2.getPosition());
+                String url = getUrl(place1.getPosition(),place2.getPosition(),"driving");
                 ReadTask downloadTask = new ReadTask();
                 downloadTask.execute(url);
 
@@ -233,7 +233,7 @@ public class MapsActivity extends FragmentActivity implements
         String url = "https://maps.googleapis.com/maps/api/directions/"
                 + output + "?" + params;
 
-        return "https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=AIzaSyAkMcL27Qs7d3XN9SZwerWTLyxSsL4mRgY";
+        return url;
     }
     @Override
     public void onConnectionSuspended(int i) {
@@ -272,21 +272,22 @@ public class MapsActivity extends FragmentActivity implements
         return Radius * c;
     }
 
-//    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
-//        // Origin of route
-//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-//        // Destination of route
-//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-//        // Mode
-//        String mode = "mode=" + directionMode;
-//        // Building the parameters to the web service
-//        String parameters = str_origin + "&" + str_dest + "&" + mode;
-//        // Output format
-//        String output = "json";
-//        // Building the url to the web service
-//        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
-//        return url;
-//    }
+    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        // Mode
+        String mode = "mode=" + directionMode;
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + mode;
+        // Output format
+        String output = "json";
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
+        Log.i("url------->",url);
+        return url;
+    }
 
     @Override
     public void onTaskDone(Object... values) {
@@ -335,7 +336,7 @@ public class MapsActivity extends FragmentActivity implements
                 e.printStackTrace();
             }
 
-            Log.i("routes", "routes "+routes.toArray().toString());
+          //  Log.i("routes", "routes "+routes.toArray().toString());
             return routes;
         }
 
@@ -364,7 +365,7 @@ public class MapsActivity extends FragmentActivity implements
                 polyLineOptions.width(2);
                 polyLineOptions.color(Color.BLUE);
             }
-            if(points.size()!=0)
+
                 mMap.addPolyline(polyLineOptions);
         }
     }
@@ -410,6 +411,8 @@ public class MapsActivity extends FragmentActivity implements
             JSONArray jSteps = null;
             try {
                 jRoutes = jObject.getJSONArray("routes");
+
+                Log.i("Mylog",jRoutes.toString());
                 /** Traversing all routes */
                 for (int i = 0; i < jRoutes.length(); i++) {
                     jLegs = ((JSONObject) jRoutes.get(i)).getJSONArray("legs");
